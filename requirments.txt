@@ -1,0 +1,36 @@
+# pip install 목록
+
+# 기본 PyTorch (CUDA는 환경에 맞게 설치)
+torch
+torchvision
+torchaudio
+
+# YOLO + 이미지 처리
+ultralytics
+opencv-python-headless
+pillow
+matplotlib
+tqdm
+
+# CLIP (GitHub 버전)
+git+https://github.com/openai/CLIP.git
+
+# 분리 / 누끼
+rembg
+onnxruntime
+
+# Diffusers + Transformers for Stable Diffusion
+diffusers
+transformers
+accelerate
+safetensors
+huggingface_hub
+
+# LLaVA
+git+https://github.com/haotian-liu/LLaVA.git
+sentencepiece
+timm
+
+# LLM API
+openai
+anthropic
