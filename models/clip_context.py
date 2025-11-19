@@ -8,6 +8,7 @@ from labels.scene_labels import (
     ACTIVITY_LABELS,
     STYLE_LABELS,
 )
+from models.yolo_seg import load_image_with_orientation
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -35,7 +36,7 @@ def get_text_features(label_list: List[str], category: str, device: str = DEVICE
     """
     label_list + category 조합으로 텍스트 임베딩 캐시
     """
-    key = f"{category}_{len(label_list)}"
+    key = f"{category}_" + ",".join(label_list)
 
     if key in _cached_text_embeddings:
         return _cached_text_embeddings[key]
@@ -75,7 +76,7 @@ class ClipContextExtractor:
 
     def compute(self, image_path: str) -> Dict[str, Any]:
         """이미지에서 배경/활동/스타일을 CLIP으로 추출"""
-        image = Image.open(image_path).convert("RGB")
+        image = load_image_with_orientation(image_path).convert("RGB")
         image_tensor = self.preprocess(image).unsqueeze(0).to(self.device)
 
         bg, bg_conf = self._get_top_label(image_tensor, BACKGROUND_LABELS, "background")
@@ -90,3 +91,14 @@ class ClipContextExtractor:
                 "style": {"label": sty, "confidence": sty_conf},
             }
         }
+
+_extractor = ClipContextExtractor()
+
+def compute_scene_context(image_path: str) -> Dict[str, Any]:
+    """
+    analyze_images에서 바로 쓰기 위한 헬퍼 함수.
+    image_path를 받아서 scene_context dict만 반환.
+    """
+    result = _extractor.compute(image_path)
+    # result 구조: { "filename": ..., "scene_context": { ... } }
+    return result["scene_context"]

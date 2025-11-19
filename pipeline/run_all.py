@@ -1,31 +1,25 @@
-import os
 from utils.env import setup_env
 from pipeline.analyze_images import run_analysis
 from pipeline.background_planner import run_background_selection
 from pipeline.compose_collage import run_collage
-
+import os
 
 def run_everything():
-    """
-    DailyFrame 전체 파이프라인 자동 실행:
-      1) YOLO + CLIP 분석 → result.json
-      2) LLM 배경 선택 + zone 매핑 → composition_plan.json
-      3) Diffusion 합성 → 최종 콜라주 이미지
-
-    개발 중 전체 플로우를 빠르게 테스트할 때 사용한다.
-    """
     print("\n============================")
     print("🚀 Step 0: 환경 세팅")
     print("============================")
 
-    PATHS, DEVICE = setup_env()
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    PATHS, CONFIG, DEVICE = setup_env(base_dir)
     print(f"📁 PATHS = {PATHS}")
+    print(f"🧠 CONFIG = {CONFIG}")
     print(f"💻 DEVICE = {DEVICE}")
 
     print("\n============================")
     print("🔍 Step 1: YOLO + CLIP 분석 실행 중…")
     print("============================")
 
+    # ✅ DEVICE도 같이 넘겨주는 게 자연스러움 (YOLO, CLIP 모두 사용)
     result, result_path = run_analysis(PATHS)
     print(f"✅ 분석 완료 → {result_path}")
 

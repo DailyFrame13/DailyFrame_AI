@@ -290,37 +290,20 @@ BACKGROUND_METADATA = {
 }
 
 
-def load_background_templates_from_uploaded() -> Dict[str, Dict]:
+def load_background_templates(background_dir: str) -> Dict[str, Dict]:
     """
-    BACKGROUND_METADATA에 정의된 메타데이터와
-    실제 backgrounds/ 폴더에 업로드된 PNG/JPG 파일을 매칭해서
-    BACKGROUND_TEMPLATES 딕셔너리를 생성한다.
-
-    반환 형식 예:
-    {
-      "cozy_sunlit_cafe": {
-         "image_path": "backgrounds/친구연애_warm.png",
-         "metadata": { ... BACKGROUND_METADATA["친구연애_warm.png"] ... }
-      },
-      ...
-    }
+    BACKGROUND_METADATA + 실제 이미지 파일을 합쳐 BACKGROUND_TEMPLATES를 만든다.
     """
     templates: Dict[str, Dict] = {}
 
-    # BACKGROUND_METADATA: { "친구연애_warm.png": { ... }, ... } 구조라고 가정
     for filename, meta in BACKGROUND_METADATA.items():
-        # 🔹 main.py에서 넘겨준 background_dir 기준으로 경로 생성
         image_path = os.path.join(background_dir, filename)
 
         if not os.path.exists(image_path):
-            # 메타데이터는 있는데 파일이 없으면 스킵
             print(f"⚠️ 배경 이미지 파일을 찾을 수 없습니다: {image_path}")
             continue
 
-        # 템플릿 key: meta["name"] 사용 (예: "sns_upload_cozy")
         template_key = meta.get("name") or os.path.splitext(filename)[0]
-
-        # safe_zones 유효성 체크
         safe_zones = meta.get("safe_zones", [])
         if not safe_zones:
             print(f"⚠️ '{template_key}' 템플릿에 safe_zones가 없습니다. (파일: {filename})")
@@ -331,3 +314,4 @@ def load_background_templates_from_uploaded() -> Dict[str, Dict]:
         }
 
     return templates
+    

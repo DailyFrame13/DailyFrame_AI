@@ -3,6 +3,7 @@ import os
 import json
 from typing import List, Dict, Any
 from huggingface_hub import InferenceClient
+from background.metadata import load_background_templates
 
 
 # =========================================================

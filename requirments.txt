@@ -1,36 +1,64 @@
-# pip install 목록
+# ----------------------------
+# Core Python Libraries
+# ----------------------------
+numpy
+pillow
+matplotlib
+tqdm
+opencv-python-headless
 
-# 기본 PyTorch (CUDA는 환경에 맞게 설치)
+# ----------------------------
+# PyTorch (기본 설치)
+# CUDA 버전 맞춰 따로 설치
+# torch==2.1+ 권장
+# ----------------------------
 torch
 torchvision
 torchaudio
 
-# YOLO + 이미지 처리
-ultralytics
-opencv-python-headless
-pillow
-matplotlib
-tqdm
+# ----------------------------
+# YOLOv8 (Segmentation)
+# ----------------------------
+ultralytics==8.2.0
 
-# CLIP (GitHub 버전)
+# ----------------------------
+# CLIP (OpenAI GitHub repo)
+# ----------------------------
 git+https://github.com/openai/CLIP.git
 
-# 분리 / 누끼
+# ----------------------------
+# Rembg (cutout / alpha mask)
+# ----------------------------
 rembg
 onnxruntime
 
-# Diffusers + Transformers for Stable Diffusion
-diffusers
+# ----------------------------
+# Stable Diffusion / Diffusers
+# Collage Diffusion 기반
+# ----------------------------
+diffusers==0.21.0
 transformers
 accelerate
 safetensors
 huggingface_hub
+einops
 
-# LLaVA
-git+https://github.com/haotian-liu/LLaVA.git
+# ----------------------------
+# LLaVA-HF API Client
+# (llava-hf/llava-v1.6-vicuna-7b-hf)
+# ----------------------------
+huggingface_hub
 sentencepiece
 timm
 
-# LLM API
-openai
-anthropic
+# ----------------------------
+# Web inference format (HF InferenceClient)
+# ----------------------------
+huggingface_hub
+requests
+python-multipart==0.0.5
+
+# ----------------------------
+# Optional (Safety checker)
+# ----------------------------
+scikit-image

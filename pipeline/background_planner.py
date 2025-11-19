@@ -11,7 +11,6 @@ def run_background_selection(result_path, PATHS):
 
     bg_templates = load_background_templates(PATHS["backgrounds"])
 
-    # candidate_objects 만들기 (YOLO 결과 기반)
     candidate_objects = []
     for img in result_json["images"]:
         filename = img["filename"]
@@ -22,15 +21,19 @@ def run_background_selection(result_path, PATHS):
                 "rgba_path": obj["rgba_path"]
             })
 
+    # 🔹 여기 bg_templates 추가
     plan = select_background_with_llm(
         summary_data=result_json["images"],
-        candidate_objects=candidate_objects
+        candidate_objects=candidate_objects,
+        BACKGROUND_TEMPLATES=bg_templates,
     )
 
+    # 🔹 여기도 bg_templates 추가
     coords = calculate_pixel_coordinates(
         background_key=plan["selected_background"],
         object_placement_plan=plan["object_placement"],
-        result_json=result_json
+        result_json=result_json,
+        BACKGROUND_TEMPLATES=bg_templates,
     )
 
     final = {
