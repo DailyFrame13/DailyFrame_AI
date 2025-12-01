@@ -47,14 +47,12 @@ einops
 # LLaVA-HF API Client
 # (llava-hf/llava-v1.6-vicuna-7b-hf)
 # ----------------------------
-huggingface_hub
 sentencepiece
 timm
 
 # ----------------------------
 # Web inference format (HF InferenceClient)
 # ----------------------------
-huggingface_hub
 requests
 python-multipart==0.0.5
 
