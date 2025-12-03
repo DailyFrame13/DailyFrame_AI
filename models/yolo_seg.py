@@ -4,8 +4,11 @@ import os
 import numpy as np
 from typing import List, Dict
 from PIL import Image, ImageOps
+
+# ⚠️ safe_globals 등록 이후에 YOLO import
 from ultralytics import YOLO
 from utils.masks import apply_mask_full
+
 
 DEVICE = "cuda" if os.environ.get("USE_GPU", "1") == "1" else "cpu"
 

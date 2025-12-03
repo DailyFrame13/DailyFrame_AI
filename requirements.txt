@@ -1,4 +1,10 @@
 # ----------------------------
+# Web Server (API 필수 추가됨 ⭐)
+# ----------------------------
+fastapi
+uvicorn
+
+# ----------------------------
 # Core Python Libraries
 # ----------------------------
 numpy
@@ -44,19 +50,10 @@ huggingface_hub
 einops
 
 # ----------------------------
-# LLaVA-HF API Client
-# (llava-hf/llava-v1.6-vicuna-7b-hf)
+# LLaVA / Etc
 # ----------------------------
 sentencepiece
 timm
-
-# ----------------------------
-# Web inference format (HF InferenceClient)
-# ----------------------------
 requests
 python-multipart==0.0.5
-
-# ----------------------------
-# Optional (Safety checker)
-# ----------------------------
 scikit-image

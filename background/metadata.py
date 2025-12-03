@@ -1,6 +1,7 @@
 import os
 from typing import Dict
 
+
 BACKGROUND_METADATA = {
     # 희진
     "sns업로드_cozy.png": {
@@ -9,10 +10,10 @@ BACKGROUND_METADATA = {
         "category": ["sns_upload", "cafe_mood", "interior_background"],
         "suitable_objects": ["person", "coffee_cup", "book", "stationery", "small_props"],
         "safe_zones": [
-            (200, 1050, 560, 1250, "sns_upload__cozy__table"),
-            (570, 1040, 720, 1150, "sns_upload__cozy__cup"),
-            (100, 1300, 400, 1500, "sns_upload__cozy__chair_left"),
-            (700, 1300, 1000, 1500, "sns_upload__cozy__chair_right")
+            # (150, 1000, 360, 1200, "sns_upload__cozy__table_left"),
+            # (570, 1040, 720, 1150, "sns_upload__cozy__cup"),
+            (200, 900, 360, 1000, "sns_upload__cozy__table_left"),
+
         ],
         "description": "따뜻한 필름 톤의 카페 한 켠 분위기 — 조명 아래 작은 테이블과 커피가 있는 cozy aesthetic 공간"
     },
@@ -155,7 +156,7 @@ BACKGROUND_METADATA = {
         "description": "은은한 촛불 조명 아래 두 개의 와인잔이 놓인 로맨틱한 디너 테이블. 따뜻하고 친밀한 분위기의 저녁 식사 장면에 적합한 배경."
     },
     "학교업무_neutral.png": {
-        "name": "shcool_work__neutral",
+        "name": "school_work__neutral",
         "mood": ["warm", "focused", "calm", "academic", "morning_light"],
         "category": ["study_space", "library_corner", "note_writing", "daily_routine", "sns_upload"],
         "suitable_objects": ["notebook", "pen", "coffee_cup", "laptop", "glasses", "stationery", "small_book_stack", "tablet"],
@@ -166,7 +167,7 @@ BACKGROUND_METADATA = {
         "description": "잔잔한 햇살이 들어오는 도서관/서재 공부 공간. 나무 책상 위에 책과 노트, 텀블러가 놓인 차분하고 집중하기 좋은 분위기."
     },
     "학교업무_informative.png": {
-        "name": "shcool_work__informative",
+        "name": "school_work__informative",
         "mood": ["clean", "minimal", "professional", "bright", "organized"],
         "category": ["meeting_room", "office_space", "study_room", "presentation_setup", "teamwork_space"],
         "suitable_objects": ["laptop", "notebook", "pen", "coffee_cup", "sticky_notes", "tablet", "nameplate", "documents"],
@@ -226,7 +227,7 @@ BACKGROUND_METADATA = {
         "description": "부드러운 햇살이 드는 창가, 책과 꽃이 놓인 따뜻하고 고요한 무드"
     },
     "패션메이크업_trendy.png": {
-        "name": "fashio_makeup__trendy",
+        "name": "fashion_makeup__trendy",
         "mood": ["fresh", "calm", "sunny", "minimal", "pastel"],
         "category": ["travel_log", "street_aesthetic", "daylight_scene", "sns_upload"],
         "suitable_objects": ["person", "bag", "bicycle", "coffee_cup"],
@@ -263,28 +264,42 @@ BACKGROUND_METADATA = {
 }
 
 
-def load_background_templates(background_dir: str) -> Dict[str, Dict]:
+# ✅ 새 표준: build_background_templates
+def build_background_templates(base_dir: str = "./data/backgrounds") -> Dict[str, Dict]:
     """
-    BACKGROUND_METADATA + 실제 이미지 파일을 합쳐 BACKGROUND_TEMPLATES를 만든다.
+    BACKGROUND_METADATA + 실제 이미지 파일 경로를 합쳐서
+    BACKGROUND_TEMPLATES를 생성한다.
+
+    결과 예시:
+    {
+      "sns_upload__cozy": {
+        "path": "./data/backgrounds/sns업로드_cozy.png",
+        "metadata": { ... }
+      },
+      ...
+    }
     """
     templates: Dict[str, Dict] = {}
 
     for filename, meta in BACKGROUND_METADATA.items():
-        image_path = os.path.join(background_dir, filename)
-
-        if not os.path.exists(image_path):
-            print(f"⚠️ 배경 이미지 파일을 찾을 수 없습니다: {image_path}")
-            continue
-
-        template_key = meta.get("name") or os.path.splitext(filename)[0]
-        safe_zones = meta.get("safe_zones", [])
-        if not safe_zones:
-            print(f"⚠️ '{template_key}' 템플릿에 safe_zones가 없습니다. (파일: {filename})")
-
-        templates[template_key] = {
-            "image_path": image_path,
+        key = meta.get("name") or os.path.splitext(filename)[0]
+        templates[key] = {
+            "path": os.path.join(base_dir, filename),
             "metadata": meta,
         }
 
     return templates
-    
+
+
+# ✅ 기존 코드와 호환용: load_background_templates
+#    background_planner.py 에서 이 이름을 import 하고 있음
+def load_background_templates(background_dir: str = "./data/backgrounds") -> Dict[str, Dict]:
+    """
+    이전 코드 호환용 래퍼.
+    내부적으로 build_background_templates를 호출한다.
+    """
+    return build_background_templates(base_dir=background_dir)
+
+
+# ✅ 실제 전역 템플릿 딕셔너리
+BACKGROUND_TEMPLATES: Dict[str, Dict] = build_background_templates()

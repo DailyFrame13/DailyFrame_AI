@@ -42,24 +42,32 @@ from diffusers.models.controlnet import ControlNetOutput
 from diffusers.models.modeling_utils import ModelMixin
 from diffusers.schedulers import KarrasDiffusionSchedulers, EulerAncestralDiscreteScheduler
 from diffusers.utils import (
-    PIL_INTERPOLATION,
-    is_accelerate_available,
-    is_accelerate_version,
-    logging,
-    randn_tensor,
+    load_image,
+    make_image_grid,
+    is_xformers_available,
 )
 
-from diffusers.pipeline_utils import DiffusionPipeline
+from diffusers.utils.torch_utils import randn_tensor
+
+from diffusers import DiffusionPipeline
 from diffusers.pipelines.stable_diffusion import (
     StableDiffusionPipelineOutput,
     StableDiffusionSafetyChecker,
 )
+import logging
+
+PIL_INTERPOLATION = {
+    "nearest": Image.Resampling.NEAREST,
+    "bilinear": Image.Resampling.BILINEAR,
+    "bicubic": Image.Resampling.BICUBIC,
+    "lanczos": Image.Resampling.LANCZOS,
+}
 
 class Control(Enum):
     POSE = 1
     CANNY = 2
 
-logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
+logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 def preprocess_image(image):
     w, h = image.size
@@ -910,7 +918,7 @@ class StableDiffusionControlNetPipeline(DiffusionPipeline, TextualInversionLoade
         mask_layers, 
         img2img_strength, 
         noise_strengths, 
-        noise_blur = 10,
+        noise_blur = 30,
     ):
         collage_mask = Image.new("L", (512,512), ((int)(img2img_strength * 255)))
         for i in range(len(noise_strengths)):
